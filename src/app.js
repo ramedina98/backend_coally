@@ -7,6 +7,7 @@ import logging from './config/logging.js';
 //middleware to handle the loggings...
 import { loggingHandler } from './middleware/loggingMiddleware.js';
 import { routeNotFound } from './middleware/routeNotFoundMiddleware.js';
+import allRoutes from "./index_routes.js";
 
 // create an instance of the express application...
 const app = express();
@@ -26,6 +27,8 @@ app.use(express.static('./public'));
 // logging handler here...
 logging.info('Loggin & configuration');
 app.use(loggingHandler);
+
+allRoutes(app);
 
 // routes...
 app.get('/', (_, res) => {
