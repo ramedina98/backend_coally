@@ -5,12 +5,19 @@
 import { Router } from "express";
 import checkRevokedToken from "../middleware/checkRevokedToken.js";
 import {
-    getUsersController
+    getUsersController,
+    newUserRegisterController,
+    loginController,
+    logoutController
 } from "../controllers/authControllers.js";
 
 const authRouter = Router();
 
 // GET...
 authRouter.get('/', getUsersController);
+// POST...
+authRouter.post('/new-user/', newUserRegisterController);
+authRouter.post('/login/', loginController);
+authRouter.post('/logout/', logoutController);
 
 export default authRouter;
