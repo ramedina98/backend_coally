@@ -11,5 +11,6 @@ export const TEST = process.env.NODE_ENV === 'test';
 export const PRODUCTION = process.env.NODE_ENV === 'production';
 
 export const SERVER = {
-    SERVER_PORT:process.env.SERVER_PORT_DEV
+    SERVER_PORT:process.env.SERVER_PORT_DEV,
+    URI:process.env.MONGO_URI
 };
