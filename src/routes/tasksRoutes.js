@@ -1,12 +1,32 @@
 /**
- * Este archivo contiene las rutas requeridas para el funcionamiento del modulo tasks,
- * accesos directos a los endpoints...
- *
- * 1. POST: Crear tareas.
- * 2. GET: Listar todas las tareas con opcion a filtrar por estado...
- * 3. GET: Obtener detalles de una tarea...
- * 4. PUT: Actualizar tarea
- * 5. DELETE: elimitar una tarea
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     summary: Retrieve a list of tasks
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter tasks by status (completed or pending)
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   completed:
+ *                     type: boolean
  */
 import { Router } from "express";
 import {

@@ -6,7 +6,7 @@ import {
     getUserInfo,
     updateUserInfo,
     updateUserPassword
-} from "../services/userServices";
+} from "../services/userServices.js";
 
 /**
  * @method GET

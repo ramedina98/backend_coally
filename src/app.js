@@ -1,5 +1,8 @@
 // express framework...
 import express from "express";
+//swagger
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from "../swaggerConfig.js";
 //cors middleware to handle the cross-origin request...
 import cors from "cors";
 // logging...
@@ -11,6 +14,10 @@ import allRoutes from "./index_routes.js";
 
 // create an instance of the express application...
 const app = express();
+
+//swagger middleware...
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // use cors...
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));

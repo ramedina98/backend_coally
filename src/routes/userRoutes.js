@@ -7,7 +7,7 @@ import {
     getUserInfoController,
     updateUserInfoController,
     updateUserPasswordController
-} from "../controllers/userControllers";
+} from "../controllers/userControllers.js";
 import checkRevokedToken from "../middleware/checkRevokedToken.js";
 
 const userRouter = Router();
