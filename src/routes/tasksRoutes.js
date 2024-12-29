@@ -21,13 +21,13 @@ import checkRevokedToken from "../middleware/checkRevokedToken.js";
 const tasksRouter = Router();
 
 // GET...
-tasksRouter.get('/', getTasksController);
-tasksRouter.get('/:id', getTaskController);
+tasksRouter.get('/', checkRevokedToken, getTasksController);
+tasksRouter.get('/:id', checkRevokedToken, getTaskController);
 // POST...
-tasksRouter.post('/new-task/', createNewTaskController);
+tasksRouter.post('/new-task/', checkRevokedToken, createNewTaskController);
 // PUT...
-tasksRouter.put('/update-task/:id', updateATaskController);
+tasksRouter.put('/update-task/:id', checkRevokedToken, updateATaskController);
 // DELETE
-tasksRouter.delete('/delete-task/:id', deleteTaskController);
+tasksRouter.delete('/delete-task/:id', checkRevokedToken, deleteTaskController);
 
 export default tasksRouter;
