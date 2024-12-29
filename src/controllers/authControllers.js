@@ -6,7 +6,10 @@ import {
     getUsers,
     newUserRegister,
     login,
-    logout
+    logout,
+    deleteRefreshToken,
+    recoverdPassword,
+    resetForgotenPassword
 } from "../services/authServices.js";
 
 /**
@@ -156,4 +159,126 @@ const logoutController = async (req, res) => {
     }
 }
 
-export { getUsersController, newUserRegisterController, loginController, logoutController };
+/**
+ * @method POST
+ *
+ * This controller hendle the process of create a new access token using the
+ * refresh token to validate the user...
+ */
+const refreshTokenController = async (req, res) => {
+    const reToken = req.cookies.refreshToken;
+
+    // check if the token has been providing...
+    if(!reToken) return res.status(401).json({ message: 'Token no provided.' });
+
+    try {
+        // start the process of the new access token...
+        const result = await refreshToken(reToken);
+
+        if(typeof result === 'number'){
+            let message = '';
+
+            if(result === 404){
+                message = 'El token no es valido o ha sido revocado.';
+            } else if(result === 403){
+                message = 'Error decoding the JWT.';
+            }
+
+            return res.status(result).json({ message });
+        }
+
+        return res.status(201).json({
+            message: 'Token creado con exito.',
+            token: result
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Something went wrong while creating the task'
+        });
+    }
+}
+
+/**
+ * @method POST
+ *
+ * This controller handles the process of send an email with a token to recover the password forgoten...
+ */
+const recoverdPasswordController = async (req, res) => {
+    // decunstructing the req.body to retrieve the user_name...
+    const { user_name } = req.body;
+
+    if(!user_name){
+        return res.status(404).json({
+            message: 'Data no provied.'
+        });
+    }
+
+    try {
+        const result = await recoverdPassword(user_name);
+
+        if(result === 422){
+            return res.status(result).json({
+                message: `El usuario "${user_name}" no fu encontrado.`
+            });
+        }
+
+        return res.status(200).json({
+            message: result
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Something went wrong while creating the task'
+        });
+    }
+}
+
+/**
+ * @method PUT
+ *
+ * This controller handle the process of reset a forgoten password...
+ *
+ * @param req.body
+ * @returns res.json()
+ */
+const resetForgotenPasswordController = async (req, res) => {
+    // deconstruting the req.body to retrieve the token and the new Password...
+    const { token, newPass } = req.body;
+
+    if(!token || !newPass){
+        return res.status(404).json({
+            message: 'Token or password not provied.',
+            token,
+            newPass
+        });
+    }
+
+    try {
+        const result = await resetForgotenPassword(token, newPass);
+
+        if(result === 400){
+            return res.status(400).json({
+                message: 'Token expirado o usuario incorrecto'
+            });
+        }
+
+        return res.status(200).json({
+            message: result
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Something went wrong while creating the task'
+        });
+    }
+}
+
+export {
+    getUsersController,
+    newUserRegisterController,
+    loginController,
+    logoutController,
+    refreshTokenController,
+    recoverdPasswordController,
+    resetForgotenPasswordController
+};

@@ -16,4 +16,7 @@ export const SERVER = {
     JWT_KEY: process.env.JWT_SECRET_KEY,
     JWT_RE_TIME: process.env.JWT_TIME_REFRESH,
     JWT_TIME: process.env.JWT_TIME_SIGN,
-};
+    EHOST: process.env.PUBLIC_HOST,
+    EUSER: process.env.PUBLIC_USER,
+    EPASS: process.env.PUBLIC_PASS
+}

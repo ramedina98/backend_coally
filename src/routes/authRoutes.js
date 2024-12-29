@@ -8,7 +8,10 @@ import {
     getUsersController,
     newUserRegisterController,
     loginController,
-    logoutController
+    logoutController,
+    refreshTokenController,
+    recoverdPasswordController,
+    resetForgotenPasswordController
 } from "../controllers/authControllers.js";
 
 const authRouter = Router();
@@ -18,6 +21,10 @@ authRouter.get('/', getUsersController);
 // POST...
 authRouter.post('/new-user/', newUserRegisterController);
 authRouter.post('/login/', loginController);
-authRouter.post('/logout/', logoutController);
+authRouter.post('/logout/', checkRevokedToken, logoutController);
+authRouter.post('/refresh-token/', checkRevokedToken, refreshTokenController);
+authRouter.post('/recover-password/', recoverdPasswordController);
+// PUT...
+authRouter.put('/reset-forgoten-password/', resetForgotenPasswordController);
 
 export default authRouter;
