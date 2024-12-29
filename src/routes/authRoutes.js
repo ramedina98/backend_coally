@@ -3,7 +3,6 @@
  * autenticación...
  */
 import { Router } from "express";
-import checkRevokedToken from "../middleware/checkRevokedToken.js";
 import {
     getUsersController,
     newUserRegisterController,
@@ -13,6 +12,7 @@ import {
     recoverdPasswordController,
     resetForgotenPasswordController
 } from "../controllers/authControllers.js";
+import checkRevokedToken from "../middleware/checkRevokedToken.js";
 
 const authRouter = Router();
 

@@ -9,10 +9,13 @@
  */
 import tasksRouter from "./routes/tasksRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 export default function allRoutes(app) {
     // auth routes...
     app.use('/auth', authRouter);
+    // user routes...
+    app.use('/user', userRouter);
     // tasks routes...
     app.use('/task', tasksRouter);
 }
