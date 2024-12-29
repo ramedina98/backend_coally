@@ -10,13 +10,24 @@
  */
 import { Router } from "express";
 import {
-    createNewTaskController
+    createNewTaskController,
+    getTasksController,
+    getTaskController,
+    updateATaskController,
+    deleteTaskController
 } from "../controllers/tasksControllers.js";
+import checkRevokedToken from "../middleware/checkRevokedToken.js";
 
 const tasksRouter = Router();
 
 // GET...
+tasksRouter.get('/', getTasksController);
+tasksRouter.get('/:id', getTaskController);
 // POST...
 tasksRouter.post('/new-task/', createNewTaskController);
+// PUT...
+tasksRouter.put('/update-task/:id', updateATaskController);
+// DELETE
+tasksRouter.delete('/delete-task/:id', deleteTaskController);
 
 export default tasksRouter;
