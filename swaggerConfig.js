@@ -1,12 +1,5 @@
 import { SERVER } from './src/config/config.js';
 import swaggerJsdoc from 'swagger-jsdoc';
-import fs from "fs";
-
-function extractModuleName(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const match = fileContent.match(/@swagger\s+tags:\s+name:\s+(\w+)/i);
-    return match ? match[1] : 'default';
-}
 
 const PORT =  process.env.PORT || SERVER.SERVER_PORT;
 
@@ -25,7 +18,7 @@ const options = {
             },
         ],
     },
-    apis: ['./src/routes/*.js'], // Cambia esta ruta según la ubicación de tus rutas
+    apis: ['./src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
