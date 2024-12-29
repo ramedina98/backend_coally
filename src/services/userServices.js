@@ -6,8 +6,6 @@
  * 2. Obtener la información basica del usuario.
  * 3. Editar su contraseña.
  */
-import { extractUserInfo } from "../utils/authUtils.js"
-import { SERVER } from "../config/config.js"
 import prisma from "../config/prismaClient.js"
 import logging from "../config/logging.js"
 import bcrypt from "bcryptjs"
