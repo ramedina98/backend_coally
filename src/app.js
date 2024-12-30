@@ -23,10 +23,26 @@ app.use(cookieParser());
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // use cors...
-app.use(cors({
-    origin: '*',
-    credentials: true
-}));
+// Configuración dinámica para CORS
+app.use((req, res, next) => {
+    const origin = req.headers.origin; // Captura el origen de la solicitud
+    res.setHeader('Access-Control-Allow-Origin', origin || '*'); // Configura el origen permitido
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Permite credenciales
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS'); // Métodos permitidos
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Cabeceras permitidas
+    next();
+});
+
+// Manejo de solicitudes OPTIONS para preflight
+app.options('*', (req, res) => {
+    const origin = req.headers.origin;
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(204); // Respuesta vacía para OPTIONS
+});
+
 app.use(express.urlencoded({ extended: true }));
 // use middleware to parse JSON request bodies...
 app.use(express.json());
