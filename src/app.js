@@ -24,7 +24,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // use cors...
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://marvelous-cucurucho-dc105f.netlify.app'],
+    origin: ['http://localhost:5173', 'https://scintillating-creativity-production.up.railway.app/'],
     credentials: true
 }));
 app.use(express.urlencoded({ extended: true }));
