@@ -18,7 +18,7 @@ import bcrypt from "bcryptjs"
  */
 const getUserInfo = async (id_user) => {
     try {
-        const response = await prisma.findFirst({
+        const response = await prisma.users.findFirst({
             where: {
                 id_user: id_user
             }
@@ -31,8 +31,8 @@ const getUserInfo = async (id_user) => {
 
         return response;
     } catch (error) {
-        logging.error('Error al obtener la información del usuario.');
-        throw new Error('Error al obtener la información del usuario.');
+        logging.error('Error al obtener la información del usuario: ' + error.message);
+        throw new Error('Error al obtener la información del usuario: ' + error.message);
     }
 }
 

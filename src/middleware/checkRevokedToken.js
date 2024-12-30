@@ -1,6 +1,7 @@
 import { SERVER } from "../config/config.js";
 import prisma from "../config/prismaClient.js";
 import logging from "../config/logging.js";
+import jwt from "jsonwebtoken";
 
 const checkIfTokenIsRevoked = async (token) => {
     const revokedToken = await prisma.revoked_tokens.findFirst({
@@ -37,13 +38,16 @@ const checkRevokedToken = async (req, res, next) => {
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
-            // El token ha expirado
             logging.warning('Sesión expirada.');
-            res.status(401).json({ message: 'Sesión expirada.' });
+            return res.status(401).json({ message: 'Sesión expirada.' });
+        } else if (error.name === 'JsonWebTokenError') {
+            // Si el token es inválido o mal formado
+            logging.error('Token inválido.');
+            return res.status(403).json({ message: 'Token inválido.' });
         } else {
-            logging.error('No token provided.');
-            // Cualquier otro error de verificación
-            res.status(403).json({ message: 'Invalid token' });
+            // Manejo de cualquier otro error desconocido
+            logging.error('Error al verificar el token:', error);
+            return res.status(500).json({ message: 'Error interno del servidor' });
         }
     }
 }

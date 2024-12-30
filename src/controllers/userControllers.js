@@ -16,6 +16,8 @@ import {
 const getUserInfoController = async (req, res) => {
     const id = req.user.id_user;
 
+    console.log(id)
+
     try {
         const user_data = await getUserInfo(id);
 

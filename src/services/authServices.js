@@ -13,6 +13,7 @@ import EmailHandler from "../classes/EmailHandler.js";
 import bcrypt from "bcryptjs";
 import prisma from "../config/prismaClient.js";
 import logging from "../config/logging.js";
+import jwt from "jsonwebtoken";
 
 /**
  * @method GET
@@ -131,7 +132,7 @@ const login = async (user_name, password) => {
 const logout = async (token) => {
     try {
         // decoded the token to retrieve the id_user...
-        const decoded = extractUserInfo(token, id_user);
+        const decoded = extractUserInfo(token, "id_user");
 
         if(decoded === null){
             logging.warning('Token expirado o incorrecto.');
@@ -340,8 +341,9 @@ const recoverdPassword = async (user_name) => {
  */
 const resetForgotenPassword = async (token, newPass) => {
     try {
+
         // decode the token...
-        const decoded = extractUserInfo(token, id_user);
+        const decoded = extractUserInfo(token, "id_user");
 
         if(decoded === null){
             logging.warning('Token expirado o usuario incorrecto')
