@@ -1,0 +1,32 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model users {
+    id_user     String                    @id @default(cuid())
+    nombre1     String
+    nombre2     String
+    apellido1   String
+    apellido2   String
+    email       String                    @unique
+    user_name   String                    @unique
+    password    String
+}
+
+model revoked_tokens {
+    id Int @id @default(autoincrement())
+    token String @db.Text
+    user_id String
+    revoked_at DateTime @default(now())
+}
+
+model refresh_tokens {
+    id Int @id @default(autoincrement())
+    id_user String
+    token String @db.Text
+}

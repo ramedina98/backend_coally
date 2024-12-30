@@ -1,5 +1,9 @@
 // express framework...
 import express from "express";
+import cookieParser from "cookie-parser";
+//swagger
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from "../swaggerConfig.js";
 //cors middleware to handle the cross-origin request...
 import cors from "cors";
 // logging...
@@ -7,11 +11,22 @@ import logging from './config/logging.js';
 //middleware to handle the loggings...
 import { loggingHandler } from './middleware/loggingMiddleware.js';
 import { routeNotFound } from './middleware/routeNotFoundMiddleware.js';
+import allRoutes from "./index_routes.js";
 
 // create an instance of the express application...
 const app = express();
+
+// cookies...
+app.use(cookieParser());
+
+//swagger middleware...
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // use cors...
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.urlencoded({ extended: true }));
 // use middleware to parse JSON request bodies...
 app.use(express.json());
@@ -26,6 +41,8 @@ app.use(express.static('./public'));
 // logging handler here...
 logging.info('Loggin & configuration');
 app.use(loggingHandler);
+
+allRoutes(app);
 
 // routes...
 app.get('/', (_, res) => {
