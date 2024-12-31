@@ -58,7 +58,7 @@ El backend maneja 2 bases de datos, ambas estan montadas en railway. Mietras los
 
 La aplicación utiliza Express.js como framework principal para manejar rutas, middlewares y solicitudes HTTP. Integra middlewares clave como express.json y express.urlencoded para procesar cuerpos de solicitudes JSON y formularios, cookie-parser para gestionar cookies, y cors con una configuración dinámica que permite solicitudes desde distintos orígenes. También incorpora **swagger-ui-express** para documentar y explorar la API desde el endpoint /docs. Se utiliza EJS como motor de plantillas para renderizar vistas dinámicas, mientras que los archivos estáticos se sirven desde la carpeta public. Todas las rutas están centralizadas en un archivo principal, y una ruta inicial (/) presenta una vista básica.
 
-La ruta a la documentación de la API es la siguiente: [text](https://outstanding-spontaneity-production.up.railway.app/docs/)
+La ruta a la documentación de la API es la siguiente: [Documentación API](https://outstanding-spontaneity-production.up.railway.app/docs/)
 
 ```javascript
     //swagger middleware...
