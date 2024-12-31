@@ -7,9 +7,10 @@
     - [Variables de entorno requeridas](#variables-de-entorno-requeridas)
 3. [Funcionamiento](#funcionamiento)
     - [Explicación del app - server](#explicación-del-app---server)
-4. [Dependencias](#dependencias)
-5. [Dependencias de desarrollo](#dependencias-de-desarrollo)
-6. [Contacto](#contacto)
+4. [Middleware](#middleware)
+5. [Dependencias](#dependencias)
+6. [Dependencias de desarrollo](#dependencias-de-desarrollo)
+7. [Contacto](#contacto)
 
 
 ## Introducción
@@ -84,6 +85,97 @@ Por otro lado, el servidor está configurado para escuchar conexiones en el puer
         logging.info(`Server running on port http://localhost:${PORT}`);
         logging.info('----------------------------------------------');
     });
+```
+
+## Middleware
+
+El server hace uso de varios Middlewares custom, los cuales son:
+
+- routeNotFound: Middleware para detectar rutas incorrectas o no existentes
+
+**middleware**
+```javascript
+    export const routeNotFound = (_req, res, _next) => {
+        const error = new Error('Route not found');
+
+        logging.error(error);
+
+        return res.status(404).json({ error: error.message });
+    };
+```
+**app:** Se usa hasta el final (despues del allRoutes(app)) para cachar si la ruta no existe.
+```javaScript
+    // this middleware helps us to send an error message if any route doesn't exist...
+    app.use(routeNotFound);
+```
+- checkRevokedToken: Este middleware tiene el objetivo de interceptar cualquier token enviado desde el frontend (token de sesión), para proteger ciertas rutas.
+
+**Uso**
+```javascript
+    authRouter.post('/logout/', checkRevokedToken, logoutController);
+```
+
+**Middleware**
+```javascript
+    const checkRevokedToken = async (req, res, next) => {
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            logging.error('No token provided.');
+            res.status(401).json({ message: 'No token provided' });
+            return;
+        }
+
+        try {
+            // Verificar si el token está en la tabla de tokens revocados...
+            const isRevoked = await checkIfTokenIsRevoked(token);
+            if (isRevoked) {
+                logging.warning('Sesión expirada.');
+                res.status(403).json({ message: 'Sesión expirada.' });
+                return;
+            }
+
+            // Decodificar el token para obtener la información del usuario...
+            const decoded = jwt.verify(token, SERVER.JWT_KEY);
+            req.user = decoded;
+
+            next();
+        } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                logging.warning('Sesión expirada.');
+                return res.status(401).json({ message: 'Sesión expirada.' });
+            } else if (error.name === 'JsonWebTokenError') {
+                // Si el token es inválido o mal formado
+                logging.error('Token inválido.');
+                return res.status(403).json({ message: 'Token inválido.' });
+            } else {
+                // Manejo de cualquier otro error desconocido
+                logging.error('Error al verificar el token:', error);
+                return res.status(500).json({ message: 'Error interno del servidor' });
+            }
+        }
+    }
+```
+
+- loggingMiddleware: Este middleware intercepta la peticion HTTP, y indica en la consola el metodo y la ruta.
+
+**middleware**
+```javaScript
+    export const loggingHandler = (req, res, next) => {
+        logging.log(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.address}]`);
+
+        res.on('finish', () => {
+            logging.log(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.address}] - STATUS [${res.statusCode}]`);
+        });
+
+        next();
+    };
+```
+
+**uso**
+```javascript
+    app.use(loggingHandler);
 ```
 
 ## Dependencias
